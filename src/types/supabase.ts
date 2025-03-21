@@ -9,15 +9,61 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      threads: {
+        Row: {
+          author_id: string
+          category: string
+          content: string
+          created_at: string | null
+          downvotes: number | null
+          id: string
+          title: string
+          updated_at: string | null
+          upvotes: number | null
+        }
+        Insert: {
+          author_id: string
+          category: string
+          content: string
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string
+          title: string
+          updated_at?: string | null
+          upvotes?: number | null
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          content?: string
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+          upvotes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "threads_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           avatar_url: string | null
           created_at: string
           email: string | null
+          experience_points: number | null
           full_name: string | null
           id: string
           image: string | null
           is_2fa_enabled: boolean | null
+          level: number | null
           name: string | null
           otp_expires_at: string | null
           otp_secret: string | null
@@ -30,10 +76,12 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          experience_points?: number | null
           full_name?: string | null
           id: string
           image?: string | null
           is_2fa_enabled?: boolean | null
+          level?: number | null
           name?: string | null
           otp_expires_at?: string | null
           otp_secret?: string | null
@@ -46,10 +94,12 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          experience_points?: number | null
           full_name?: string | null
           id?: string
           image?: string | null
           is_2fa_enabled?: boolean | null
+          level?: number | null
           name?: string | null
           otp_expires_at?: string | null
           otp_secret?: string | null
@@ -60,12 +110,51 @@ export type Database = {
         }
         Relationships: []
       }
+      votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          thread_id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          thread_id: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          thread_id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_vote_count: {
+        Args: {
+          p_thread_id: string
+          p_vote_field: string
+          p_vote_change: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
