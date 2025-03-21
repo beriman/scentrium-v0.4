@@ -8,24 +8,64 @@ import AuthLayout from "./AuthLayout";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../../../supabase/supabase";
-import { Separator } from "@/components/ui/separator";
+import OTPVerification from "./OTPVerification";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [otpData, setOtpData] = useState<{
+    userId: string;
+    email: string;
+  } | null>(null);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
-      await signIn(email, password);
-      navigate("/profile");
+      const result = await signIn(email, password);
+
+      if (result.requires2FA && result.userId && result.email) {
+        // Show OTP verification screen
+        setOtpData({ userId: result.userId, email: result.email });
+        setShowOTPVerification(true);
+      } else {
+        // Regular login, redirect to profile
+        navigate("/profile");
+      }
     } catch (error) {
+      console.error("Login error:", error);
       setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleOTPSuccess = () => {
+    navigate("/profile");
+  };
+
+  const handleOTPCancel = () => {
+    setShowOTPVerification(false);
+    setOtpData(null);
+  };
+
+  if (showOTPVerification && otpData) {
+    return (
+      <OTPVerification
+        userId={otpData.userId}
+        email={otpData.email}
+        onSuccess={handleOTPSuccess}
+        onCancel={handleOTPCancel}
+      />
+    );
+  }
 
   return (
     <AuthLayout>
@@ -77,8 +117,9 @@ export default function LoginForm() {
           <Button
             type="submit"
             className="w-full h-12 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-medium"
+            disabled={loading}
           >
-            Masuk
+            {loading ? "Logging in..." : "Masuk"}
           </Button>
 
           <div className="relative my-4">

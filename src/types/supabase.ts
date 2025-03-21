@@ -17,7 +17,11 @@ export type Database = {
           full_name: string | null
           id: string
           image: string | null
+          is_2fa_enabled: boolean | null
           name: string | null
+          otp_expires_at: string | null
+          otp_secret: string | null
+          role: string | null
           token_identifier: string
           updated_at: string | null
           user_id: string | null
@@ -29,7 +33,11 @@ export type Database = {
           full_name?: string | null
           id: string
           image?: string | null
+          is_2fa_enabled?: boolean | null
           name?: string | null
+          otp_expires_at?: string | null
+          otp_secret?: string | null
+          role?: string | null
           token_identifier: string
           updated_at?: string | null
           user_id?: string | null
@@ -41,7 +49,11 @@ export type Database = {
           full_name?: string | null
           id?: string
           image?: string | null
+          is_2fa_enabled?: boolean | null
           name?: string | null
+          otp_expires_at?: string | null
+          otp_secret?: string | null
+          role?: string | null
           token_identifier?: string
           updated_at?: string | null
           user_id?: string | null

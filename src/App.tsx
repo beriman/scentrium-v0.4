@@ -4,6 +4,7 @@ import routes from "tempo-routes";
 import LoginForm from "./components/auth/LoginForm";
 import SignUpForm from "./components/auth/SignUpForm";
 import Dashboard from "./components/pages/dashboard";
+import Profile from "./components/pages/profile";
 import Success from "./components/pages/success";
 import Home from "./components/pages/home";
 import { AuthProvider, useAuth } from "../supabase/auth";
@@ -43,7 +44,7 @@ function AppRoutes() {
           path="/profile"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <Profile />
             </PrivateRoute>
           }
         />
