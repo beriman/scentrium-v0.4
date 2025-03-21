@@ -40,11 +40,14 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/success"
+          path="/profile"
           element={
-            <Success />
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
           }
         />
+        <Route path="/success" element={<Success />} />
       </Routes>
       {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
     </>
